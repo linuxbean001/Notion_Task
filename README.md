@@ -29,6 +29,6 @@ If you are developing a production application, we recommend updating the config
 
 Following Steps:-
 
-npm install 
-npm run dev
+1. npm install 
+2. npm run dev
 
