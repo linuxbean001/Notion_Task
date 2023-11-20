@@ -113,7 +113,7 @@ function Header({
           {cartItems.length != 0 ? (
             <div>
               {cartItems.map((item, index) => (
-                <div className="border w- rounded mt-5 flex p-4 justify-between items-center flex-wrap">
+                <div className="border w- rounded mt-5 flex p-4 items-center flex-wrap">
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
                     className="w-24"
@@ -122,7 +122,7 @@ function Header({
                     <h3 className="text-lg font-medium">{item.sku}</h3>
                     <p className="text-gray-600 text-xs">{item.label}</p>
                   </div>
-                  <div className="flex">
+                  <div className="flex ml-auto">
                     <h4 className="text-lg font-medium mr-3">
                       <sup className="text-lg text-purple-800"> </sup> &euro;{" "}
                       {item.price}
