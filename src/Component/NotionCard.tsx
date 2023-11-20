@@ -71,8 +71,12 @@ function NotionCard() {
     setWishlist(updatedWishlist);
 
     // Add or remove items to/from the cart based on wishlist toggle
-    
+    console.log("updatedWishlist",updatedWishlist)
     const updatedCart = updatedWishlist.reduce((cart, wish, idx) => {
+      console.log("cart",cart)
+      console.log("wish",wish)
+      console.log("idx",idx)
+
       if (wish) {
         cart.push(selectedVariants[idx]);
       }

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 
 interface HeaderProps {
   cartItemCount: number;
@@ -32,6 +33,10 @@ interface Product {
   variants: ProductVariant[];
 }
 
+
+
+
+
 function Header({
   cartItemCount,
   // selectedVariants,
@@ -43,13 +48,18 @@ function Header({
   const notionData = "NOTION TASK";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number>(0);
+  const [cartItemData, setCartItemData] = useState(cartItems)
 
-  console.log("maje hi maje hai ", cartItems);
+  console.log("maje hi maje hai ", cartItemData);
 
   const openModal = (index: number) => {
     setIsModalOpen(true);
     setSelectedProductIndex(index);
   };
+
+   useEffect(() => {
+    setCartItemData(cartItems);
+  }, [cartItems]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -59,12 +69,18 @@ function Header({
   // const selectedProduct = dataAPI[selectedProductIndex];
   // const selectedVariant = selectedVariants[selectedProductIndex];
 
- const deleteFromWishlist = (index : number) => {
-  const updatedWishlist = [...wishlistItems];
-  updatedWishlist[index] = false;
-  toggleWishlist(index);
-  closeModal();
-};
+const removeItemBySKU = (sku:any)=> {
+  const updatedCartItems = cartItemData.filter((item) => item.sku !== sku);
+  setCartItemData(updatedCartItems);
+  
+}
+
+
+
+
+
+
+
 
   return (
     <div>
@@ -110,9 +126,9 @@ function Header({
               {cartItemCount}
             </span>
           </h1>
-          {cartItems.length != 0 ? (
+          {cartItemData.length != 0 ? (
             <div>
-              {cartItems.map((item, index) => (
+              {cartItemData.map((item, index) => (
                 <div  key={index}  className="border w- rounded mt-5 flex p-4 items-center flex-wrap">
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
@@ -138,7 +154,7 @@ function Header({
                       <div className="w-full flex justify-between mt-1 float-right">
                         <button
                           className="text-red-700 bg-red-100 border p-2 rounded"
-                          onClick={() => deleteFromWishlist(index)} 
+                           onClick={() => removeItemBySKU(item.sku)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
