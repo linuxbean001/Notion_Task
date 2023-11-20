@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./NotionCard.css";
 import Header from "./BasicComponent/Header";
+import ProductCard from "./ProductCard";
 
 interface ProductVariant {
   label: string;
@@ -29,13 +30,11 @@ function NotionCard() {
   const [wishlist, setWishlist] = useState<boolean[]>([]);
   const [cartItems, setCartItems] = useState<ProductVariant[]>([]);
 
-  // console.log("cartItems",cartItems)
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://1b79c99a-654a-43c7-ae32-74467dfcff23.mock.pstmn.io/api/v1/products"
+          "https://hiring-workspace.vercel.app/api/v1/furniture"
         );
         if (response.ok) {
           const data = await response.json();
@@ -66,13 +65,10 @@ function NotionCard() {
     setSelectedVariants(updatedVariants);
   };
 
-  
-
   const toggleWishlist = (index: number) => {
     const updatedWishlist = [...wishlist];
     updatedWishlist[index] = !updatedWishlist[index];
     setWishlist(updatedWishlist);
-
 
     // Add or remove items to/from the cart based on wishlist toggle
     const selectedVariant = selectedVariants[index];
@@ -85,8 +81,6 @@ function NotionCard() {
     setCartItems(updatedCart);
   };
 
-  console.log("add",selectedVariants)
-
   return (
     <div>
       <Header
@@ -95,76 +89,19 @@ function NotionCard() {
         dataAPI={dataAPI}
         wishlistItems={wishlist}
         toggleWishlist={toggleWishlist}
+        cartItems={cartItems}
       />
       <div className="flex flex-wrap mt-5 justify-center">
         {dataAPI.map((product, index) => (
-          <div
+          <ProductCard
             key={index}
-            className="rounded overflow-hidden shadow-lg shadow-inner mt-5  m-4"
-            style={{ maxWidth: "300px", marginTop: "50px" }}
-          >
-            <img
-              className="w-full"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
-            />
-            <div className="bg-gray-700 mt-2">
-              <div className="px-3 py-3">
-                <h1 className="mb-2 font-medium text-center text-lg text-white">
-                  <b>{product.title}</b>
-                </h1>
-                <div className="text-white text-justify mb-2">
-                  {product.description.split(" ").slice(0, 15).join(" ")}
-                  {product.description.split(" ").length > 15 ? "..." : ""}
-                </div>
-
-                <p className="text-white text-base text-justify mb-2">
-                  <b className="text-white">Vendor:</b> &nbsp;{product.vendor}
-                </p>
-                <div
-                  className="text-white text-sm text-justify mt-3"
-                  style={{ display: "flex", flexDirection: "column" }}
-                >
-                  <div style={{ display: "flex" }}>
-                    {product.variants.map((variant, vIndex) => (
-                      <div key={vIndex} style={{ marginRight: "10px" }}>
-                        <div
-                          onClick={() => handleColorClick(variant, index)}
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: variant.color,
-                            border: "1px solid white",
-                            marginBottom: "5px",
-                            cursor: "pointer",
-                            borderRadius: "8px",
-                          }}
-                        ></div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-5 flex justify-between">
-                    {selectedVariants[index] && (
-                      <p className="text-white text-lg flex">
-                        &#8377; <b>{selectedVariants[index].price}</b> &nbsp;
-                        {selectedVariants[index].reducedPrice && (
-                          <p className="text-white text-lg line-through">
-                            {selectedVariants[index].reducedPrice}
-                          </p>
-                        )}
-                      </p>
-                    )}
-                    {/* wishlist section */}
-                    <span
-                      className="cursor-pointer text-3xl"
-                      onClick={() => toggleWishlist(index)}
-                    >
-                      {wishlist[index] ? "❤️" : "🤍"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            product={product}
+            index={index}
+            selectedVariants={selectedVariants}
+            wishlist={wishlist}
+            handleColorClick={handleColorClick}
+            toggleWishlist={toggleWishlist}
+          />
         ))}
       </div>
     </div>

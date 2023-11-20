@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import Modal from "react-modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface HeaderProps {
   cartItemCount: number;
@@ -8,6 +10,7 @@ interface HeaderProps {
   dataAPI: Product[];
   wishlistItems: boolean[];
   toggleWishlist: (index: number) => void;
+  cartItems: ProductVariant[];
 }
 
 interface ProductVariant {
@@ -35,10 +38,13 @@ function Header({
   dataAPI,
   wishlistItems,
   toggleWishlist,
+  cartItems,
 }: HeaderProps) {
   const notionData = "NOTION TASK";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number>(0);
+
+  console.log("maje hi maje hai ", cartItems);
 
   const openModal = (index: number) => {
     setIsModalOpen(true);
@@ -53,14 +59,12 @@ function Header({
   const selectedProduct = dataAPI[selectedProductIndex];
   const selectedVariant = selectedVariants[selectedProductIndex];
 
-   const deleteFromWishlist = () => {
+  const deleteFromWishlist = () => {
     const updatedWishlist = [...wishlistItems];
     updatedWishlist[selectedProductIndex] = false;
-    toggleWishlist(selectedProductIndex); 
-    closeModal(); 
+    toggleWishlist(selectedProductIndex);
+    closeModal();
   };
-
-
 
   return (
     <div>
@@ -99,60 +103,50 @@ function Header({
         contentLabel="Product Modal"
       >
         <div className="modal-content">
-          {selectedProduct &&
-          selectedVariant &&
-          wishlistItems[selectedProductIndex] ? (
+          <h1>
+            {" "}
+            <b className="text-2xl">Knoll</b>{" "}
+            <span className="bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 p-1">
+              {cartItemCount}
+            </span>
+          </h1>
+          {cartItems.length != 0 ? (
             <div>
-              <div className="border w-full rounded mt-5 flex p-4 justify-between items-center flex-wrap">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
-                  className="w-24"
-                />
-                <div className="w-2/3">
-                  <h3 className="text-lg font-medium">
-                    {selectedProduct.title}
-                  </h3>
-                  <p className="text-gray-600 text-xs">
-                    {" "}
-                    {selectedProduct.description
-                      .split(" ")
-                      .slice(0, 15)
-                      .join(" ")}
-                    {selectedProduct.description.split(" ").length > 15
-                      ? "..."
-                      : ""}
-                  </p>
-                  <h4 className="text-red-700 text-xs font-bold mt-1">
-                    {selectedProduct.vendor}
-                  </h4>
+              {cartItems.map((item, index) => (
+                <div className="border w- rounded mt-5 flex p-4 justify-between items-center flex-wrap">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
+                    className="w-24"
+                  />
+                  <div className="">
+                    <h3 className="text-lg font-medium">{item.sku}</h3>
+                    <p className="text-gray-600 text-xs">{item.label}</p>
+                  </div>
+                  <div className="flex">
+                    <h4 className="text-lg font-medium mr-3">
+                      <sup className="text-lg text-purple-800"> </sup> &euro;{" "}
+                      {item.price}
+                      <br />
+                      
+                       {
+                        item.reducedPrice ? <span className="line-through">  &euro; {item.reducedPrice} </span> : ""
+                       }
+                     
+                    </h4>
+
+                    <h5 className="text-sm font-bold text-purple-800">
+                      <div className="w-full flex justify-between mt-1 float-right">
+                        <button
+                          className="text-red-700 bg-red-100 border p-2 rounded"
+                          onClick={deleteFromWishlist}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </h5>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-3xl font-medium">
-                    <sup className="text-lg text-purple-800"> </sup>{" "}
-                    &#8377; {selectedVariant.price}
-                  </h4>
-                  <h5 className="text-sm font-bold text-purple-800">
-                    {" "}
-                    <div
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        backgroundColor: selectedVariant.color,
-                        border: "1px solid white",
-                        marginBottom: "5px",
-                        cursor: "pointer",
-                        borderRadius: "8px",
-                        float: "right",
-                      }}
-                    ></div>
-                    <div className="w-full flex justify-between mt-4 float-right">
-                      <button className="text-red-700 bg-red-100 px-3 py-1 rounded" onClick={deleteFromWishlist}>
-                        DELETE
-                      </button>
-                    </div>
-                  </h5>
-                </div>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="flex items-center justify-center h-full p-5">

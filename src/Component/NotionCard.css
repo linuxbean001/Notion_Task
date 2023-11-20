@@ -2,6 +2,18 @@
     .max-w-sm {
         max-width: 20rem;
     }
+
+    .Modal {
+        position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            outline: none;
+            width: 360px;
+    }
 }
 
 .Modal {
@@ -13,6 +25,7 @@
     padding: 20px;
     border-radius: 8px;
     outline: none;
+    width: 660px;
 }
 
 .Overlay {
@@ -25,4 +38,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.font b {
+    font-size: 15px;
+}
+
+.colorData {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.maximumWidth {
+    max-width: 305px; 
+    margin-top: 50px;
 }
