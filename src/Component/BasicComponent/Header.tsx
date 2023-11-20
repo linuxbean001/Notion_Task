@@ -34,8 +34,8 @@ interface Product {
 
 function Header({
   cartItemCount,
-  selectedVariants,
-  dataAPI,
+  // selectedVariants,
+  // dataAPI,
   wishlistItems,
   toggleWishlist,
   cartItems,
@@ -56,8 +56,8 @@ function Header({
     setSelectedProductIndex(0);
   };
 
-  const selectedProduct = dataAPI[selectedProductIndex];
-  const selectedVariant = selectedVariants[selectedProductIndex];
+  // const selectedProduct = dataAPI[selectedProductIndex];
+  // const selectedVariant = selectedVariants[selectedProductIndex];
 
  const deleteFromWishlist = (index : number) => {
   const updatedWishlist = [...wishlistItems];
