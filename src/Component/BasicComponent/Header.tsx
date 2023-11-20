@@ -59,12 +59,12 @@ function Header({
   const selectedProduct = dataAPI[selectedProductIndex];
   const selectedVariant = selectedVariants[selectedProductIndex];
 
-  const deleteFromWishlist = () => {
-    const updatedWishlist = [...wishlistItems];
-    updatedWishlist[selectedProductIndex] = false;
-    toggleWishlist(selectedProductIndex);
-    closeModal();
-  };
+ const deleteFromWishlist = (index : number) => {
+  const updatedWishlist = [...wishlistItems];
+  updatedWishlist[index] = false;
+  toggleWishlist(index);
+  closeModal();
+};
 
   return (
     <div>
@@ -113,7 +113,7 @@ function Header({
           {cartItems.length != 0 ? (
             <div>
               {cartItems.map((item, index) => (
-                <div className="border w- rounded mt-5 flex p-4 items-center flex-wrap">
+                <div  key={index}  className="border w- rounded mt-5 flex p-4 items-center flex-wrap">
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
                     className="w-24"
@@ -138,7 +138,7 @@ function Header({
                       <div className="w-full flex justify-between mt-1 float-right">
                         <button
                           className="text-red-700 bg-red-100 border p-2 rounded"
-                          onClick={deleteFromWishlist}
+                          onClick={() => deleteFromWishlist(index)} 
                         >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
