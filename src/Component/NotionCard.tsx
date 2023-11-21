@@ -29,6 +29,7 @@ function NotionCard() {
   );
   const [wishlist, setWishlist] = useState<boolean[]>([]);
   const [cartItems, setCartItems] = useState<ProductVariant[]>([]);
+  const [cartItemCount, setCartItemCount] = useState(cartItems.length);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,30 +71,27 @@ function NotionCard() {
     updatedWishlist[index] = !updatedWishlist[index];
     setWishlist(updatedWishlist);
 
-    // Add or remove items to/from the cart based on wishlist toggle
-    console.log("updatedWishlist",updatedWishlist)
     const updatedCart = updatedWishlist.reduce((cart, wish, idx) => {
-      console.log("cart",cart)
-      console.log("wish",wish)
-      console.log("idx",idx)
-
       if (wish) {
         cart.push(selectedVariants[idx]);
       }
       return cart;
     }, [] as ProductVariant[]);
     setCartItems(updatedCart);
+    setCartItemCount(updatedCart.length);
   };
 
   return (
     <div>
       <Header
-        cartItemCount={cartItems.length}
+        cartItemCount={cartItemCount}
         selectedVariants={selectedVariants}
         dataAPI={dataAPI}
         wishlistItems={wishlist}
         toggleWishlist={toggleWishlist}
         cartItems={cartItems}
+        updateCartItemCount={(newCount) => setCartItemCount(newCount)}
+        setWishlist={(newWishlist) => setWishlist(newWishlist)}
       />
       <div className="flex flex-wrap mt-5 justify-center">
         {dataAPI.map((product, index) => (

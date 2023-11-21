@@ -1,9 +1,8 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-
 
 interface HeaderProps {
   cartItemCount: number;
@@ -12,6 +11,8 @@ interface HeaderProps {
   wishlistItems: boolean[];
   toggleWishlist: (index: number) => void;
   cartItems: ProductVariant[];
+  updateCartItemCount: (newCount: number) => void;
+  setWishlist: (newWishlist: boolean[]) => void; // Add this line
 }
 
 interface ProductVariant {
@@ -33,31 +34,26 @@ interface Product {
   variants: ProductVariant[];
 }
 
-
-
-
-
 function Header({
   cartItemCount,
-  // selectedVariants,
+  selectedVariants,
   // dataAPI,
+  updateCartItemCount,
   wishlistItems,
-  toggleWishlist,
+  setWishlist,
   cartItems,
 }: HeaderProps) {
   const notionData = "NOTION TASK";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number>(0);
-  const [cartItemData, setCartItemData] = useState(cartItems)
-
-  console.log("maje hi maje hai ", cartItemData);
+  const [cartItemData, setCartItemData] = useState(cartItems);
 
   const openModal = (index: number) => {
     setIsModalOpen(true);
     setSelectedProductIndex(index);
   };
 
-   useEffect(() => {
+  useEffect(() => {
     setCartItemData(cartItems);
   }, [cartItems]);
 
@@ -66,21 +62,22 @@ function Header({
     setSelectedProductIndex(0);
   };
 
-  // const selectedProduct = dataAPI[selectedProductIndex];
-  // const selectedVariant = selectedVariants[selectedProductIndex];
+  const removeItemBySKU = (sku: any) => {
+    const updatedCartItems = cartItemData.filter((item) => item.sku !== sku);
+    setCartItemData(updatedCartItems);
+    const newCartItemCount = updatedCartItems.length;
+    updateCartItemCount(newCartItemCount);
 
-const removeItemBySKU = (sku:any)=> {
-  const updatedCartItems = cartItemData.filter((item) => item.sku !== sku);
-  setCartItemData(updatedCartItems);
-  
-}
+    const removedItemIndex = selectedVariants.findIndex(
+      (item) => item.sku === sku
+    );
 
-
-
-
-
-
-
+    if (removedItemIndex !== -1) {
+      const updatedWishlist = [...wishlistItems];
+      updatedWishlist[removedItemIndex] = false;
+      setWishlist(updatedWishlist);
+    }
+  };
 
   return (
     <div>
@@ -129,7 +126,10 @@ const removeItemBySKU = (sku:any)=> {
           {cartItemData.length != 0 ? (
             <div>
               {cartItemData.map((item, index) => (
-                <div  key={index}  className="border w- rounded mt-5 flex p-4 items-center flex-wrap">
+                <div
+                  key={index}
+                  className="border w- rounded mt-5 flex p-4 items-center flex-wrap"
+                >
                   <img
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHftdYGFyVJTVUUcDRDPZWrPRFTV-RsD_lew&usqp=CAU"
                     className="w-24"
@@ -143,18 +143,21 @@ const removeItemBySKU = (sku:any)=> {
                       <sup className="text-lg text-purple-800"> </sup> &euro;{" "}
                       {item.price}
                       <br />
-                      
-                       {
-                        item.reducedPrice ? <span className="line-through">  &euro; {item.reducedPrice} </span> : ""
-                       }
-                     
+                      {item.reducedPrice ? (
+                        <span className="line-through">
+                          {" "}
+                          &euro; {item.reducedPrice}{" "}
+                        </span>
+                      ) : (
+                        ""
+                      )}
                     </h4>
 
                     <h5 className="text-sm font-bold text-purple-800">
                       <div className="w-full flex justify-between mt-1 float-right">
                         <button
                           className="text-red-700 bg-red-100 border p-2 rounded"
-                           onClick={() => removeItemBySKU(item.sku)}
+                          onClick={() => removeItemBySKU(item.sku)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
